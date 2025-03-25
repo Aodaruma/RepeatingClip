@@ -56,7 +56,7 @@ Thus, this code is does not work on the original Aviutl(jp).
 --track2:ChangeRate(%),-300,300,0
 --track3:Direction,1,8,1,1
 --check0:Both directions,0
---dialog:Blank,local blank=5;NoBlankChangeRate/chk,local isDisableCB=0;WithRotation/chk,local isFollowRotation=1;Edge extraction/chk,local edgeExtract=0;Monochromatic/chk,local isCol=0;>Color/col,local col=0xdddddd;>GradColor/col,local gcol=0x000000;Virtual buffer/chk,local isBuffer=0;>buffer W,local bufferW=obj.screen_w;>buffer H,local bufferH=obj.screen_h;
+--dialog:Blank,local blank=5;NoBlankChangeRate/chk,local isDisableCB=0;WithRotation/chk,local isFollowRotation=1;Edge extraction(0-2),local edgeExtract=0;Monochromatic/chk,local isCol=0;>Color/col,local col=0xdddddd;>GradColor/col,local gcol=0x000000;Virtual buffer/chk,local isBuffer=0;>buffer W,local bufferW=obj.screen_w;>buffer H,local bufferH=obj.screen_h;
 
 
 local n, clipping, c, d, isBoth = obj.track0, obj.track1, obj.track2/100, obj.track3, obj.check0
@@ -64,6 +64,7 @@ local x,y=0,0 --obj.ox,obj.oy
 local w,h=obj.w,obj.h
 local directions = {"Top","Bottom","Left","Right","Bottom","Top","Right","Left"}
 blank = blank or 0
+edgeExtract = edgeExtract or 0
 
 -- define drawing
 local drawing = function(n,clipping,c,d,isBoth)

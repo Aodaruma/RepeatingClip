@@ -2,7 +2,7 @@
 This script is version 1.01. If it is outdated, please replace it with a newer script.
 We are not responsible for any damage caused by the use of this script.
 
-developed by Aodaruma (@Aodaruma_)
+developed by Aodaruma (@Aodaruma_) / MIT License
 ]]
 --track0:数,0,200,10,1
 --track1:クリッピング,0,2000,30
@@ -14,7 +14,7 @@ developed by Aodaruma (@Aodaruma_)
 local n, clipping, c, d, isBoth = obj.track0, obj.track1, obj.track2 / 100, obj.track3, obj.check0
 local x, y = 0, 0 --obj.ox,obj.oy
 local w, h = obj.w, obj.h
-local directions = {"上", "下", "左", "右", "下", "上", "右", "左"}
+local directions = { "上", "下", "左", "右", "下", "上", "右", "左" }
 blank = blank or 0
 
 -- define drawing
@@ -34,7 +34,7 @@ local drawing = function(n, clipping, c, d, isBoth)
 		-- colorize
 		if isCol == 1 and col then
 			gcol = gcol or col
-			local mcol, mgcol = {RGB(col)}, {RGB(gcol)} -- num to table
+			local mcol, mgcol = { RGB(col) }, { RGB(gcol) } -- num to table
 			local af, uf = (i / n), 1 - (i / n)
 			local rcol =
 				RGB(mcol[1] * uf + mgcol[1] * af, mcol[2] * uf + mgcol[2] * af, mcol[3] * uf + mgcol[3] * af) -- changing RGB to gradate

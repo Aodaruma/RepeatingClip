@@ -4,17 +4,17 @@ We are not responsible for any damage caused by the use of this script.
 
 developed by Aodaruma (@Aodaruma_) / MIT License
 ]]
---track0:,0,200,10,1
---track1:NbsO,0,2000,30
---track2:ĎťŚ(%),-300,300,0
---track3:űü,1,8,1,1
---check0:źűü,0
+--track0:数,0,200,10,1
+--track1:クリッピング,0,2000,30
+--track2:変化率(%),-300,300,0
+--track3:方向,1,8,1,1
+--check0:両方向,0
 --dialog:空白,local blank=5;変化率空白を無効/chk,local isDisableCB=0;回転に付随/chk,local isFollowRotation=1;ｴｯｼﾞ抽出(0-2),local edgeExtract=0;単色化/chk,local isCol=0;└ Color/col,local col=0xdddddd;└ GradColor/col,local gcol=0x000000;仮想バッファ/chk,local isBuffer=0;└ バッファW,local bufferW=obj.screen_w;└ バッファH,local bufferH=obj.screen_h;
 
 local n, clipping, c, d, isBoth = obj.track0, obj.track1, obj.track2 / 100, obj.track3, obj.check0
 local x, y = 0, 0 --obj.ox,obj.oy
 local w, h = obj.w, obj.h
-local directions = { "ă", "ş", "ś", "E", "ş", "ă", "E", "ś" }
+local directions = { "上", "下", "左", "右", "下", "上", "右", "左" }
 blank = blank or 0
 edgeExtract = edgeExtract or 0
 
@@ -37,13 +37,16 @@ local drawing = function(n, clipping, c, d, isBoth)
 			gcol = gcol or col
 			local mcol, mgcol = { RGB(col) }, { RGB(gcol) } -- num to table
 			local af, uf = (i / n), 1 - (i / n)
-			local rcol =
-				RGB(mcol[1] * uf + mgcol[1] * af, mcol[2] * uf + mgcol[2] * af, mcol[3] * uf + mgcol[3] * af) -- changing RGB to gradate
-			obj.effect("PFť", "color", rcol, "PxđŰˇé", 0)
+			local rcol = RGB(
+				mcol[1] * uf + mgcol[1] * af,
+				mcol[2] * uf + mgcol[2] * af,
+				mcol[3] * uf + mgcol[3] * af
+			) -- changing RGB to gradate
+			obj.effect("単色化", "color", rcol, "輝度を保持する", 0)
 		end
 
 		-- clipping
-		obj.effect("NbsO", directions[(d + 4 * r - 1) % 8 + 1], clipping * (c * i + 1), "SĚĘuđĎX", 1)
+		obj.effect("クリッピング", directions[(d + 4 * r - 1) % 8 + 1], clipping * (c * i + 1), "中心の位置を変更", 1)
 		rx, ry =
 			((w - dis) * i + clipping / 2) * ((d + r) % 2 * 2 - 1) * (1 - math.ceil(d / 2) % 2),
 			((h - dis) * i + clipping / 2) * ((d + r) % 2 * 2 - 1) * (math.ceil(d / 2) % 2)
@@ -52,6 +55,15 @@ local drawing = function(n, clipping, c, d, isBoth)
 			local mx, my = rx, ry
 			rx = mx * math.cos(t) - my * math.sin(t)
 			ry = mx * math.sin(t) + my * math.cos(t)
+		end
+
+		-- edge extraction
+		if edgeExtract == 1 then
+			obj.effect("領域拡張", "上", 2, "下", 2, "左", 2, "右", 2)
+			obj.effect("エッジ抽出", "透明度エッジを抽出", 1)
+			obj.effect("クリッピング", "上", 2, "下", 2, "左", 2, "右", 2)
+		elseif edgeExtract == 2 then
+			obj.effect("エッジ抽出", "透明度エッジを抽出", 1)
 		end
 
 		-- drawing

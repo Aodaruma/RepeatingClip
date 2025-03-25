@@ -1,20 +1,20 @@
 --[[
-This script is version 1.01. If it is outdated, please replace it with a newer script.
+This script is version 1.2. If it is outdated, please replace it with a newer script.
 We are not responsible for any damage caused by the use of this script.
 
 developed by Aodaruma (@Aodaruma_) / MIT License
 ]]
---track0:æ•°,0,200,10,1
---track1:ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°,0,2000,30
---track2:å¤‰åŒ–ç‡(%),-300,300,0
---track3:æ–¹å‘,1,8,1,1
---check0:ä¸¡æ–¹å‘,0
---dialog:ç©ºç™½,local blank=5;å¤‰åŒ–ç‡ç©ºç™½ã‚’ç„¡åŠ¹/chk,local isDisableCB=0;å›è»¢ã«ä»˜éš/chk,local isFollowRotation=1;ï½´ï½¯ï½¼ï¾æŠ½å‡º(0-2),local edgeExtract=0;å˜è‰²åŒ–/chk,local isCol=0;â”” Color/col,local col=0xdddddd;â”” GradColor/col,local gcol=0x000000;ä»®æƒ³ãƒãƒƒãƒ•ã‚¡/chk,local isBuffer=0;â”” ãƒãƒƒãƒ•ã‚¡W,local bufferW=obj.screen_w;â”” ãƒãƒƒãƒ•ã‚¡H,local bufferH=obj.screen_h;
+--track0:”,0,200,10,1
+--track1:ƒNƒŠƒbƒsƒ“ƒO,0,2000,30
+--track2:•Ï‰»—¦(%),-300,300,0
+--track3:•ûŒü,1,8,1,1
+--check0:—¼•ûŒü,0
+--dialog:‹ó”’,local blank=5;•Ï‰»—¦‹ó”’‚ğ–³Œø/chk,local isDisableCB=0;‰ñ“]‚É•t/chk,local isFollowRotation=1;´¯¼Ş’Šo(0-2),local edgeExtract=0;’PF‰»/chk,local isCol=0;„¤ Color/col,local col=0xdddddd;„¤ GradColor/col,local gcol=0x000000;‰¼‘zƒoƒbƒtƒ@/chk,local isBuffer=0;„¤ ƒoƒbƒtƒ@W,local bufferW=obj.screen_w;„¤ ƒoƒbƒtƒ@H,local bufferH=obj.screen_h;
 
 local n, clipping, c, d, isBoth = obj.track0, obj.track1, obj.track2 / 100, obj.track3, obj.check0
 local x, y = 0, 0 --obj.ox,obj.oy
 local w, h = obj.w, obj.h
-local directions = { "ä¸Š", "ä¸‹", "å·¦", "å³", "ä¸‹", "ä¸Š", "å³", "å·¦" }
+local directions = { "ã", "‰º", "¶", "‰E", "‰º", "ã", "‰E", "¶" }
 blank = blank or 0
 edgeExtract = edgeExtract or 0
 
@@ -42,11 +42,11 @@ local drawing = function(n, clipping, c, d, isBoth)
 				mcol[2] * uf + mgcol[2] * af,
 				mcol[3] * uf + mgcol[3] * af
 			) -- changing RGB to gradate
-			obj.effect("å˜è‰²åŒ–", "color", rcol, "è¼åº¦ã‚’ä¿æŒã™ã‚‹", 0)
+			obj.effect("’PF‰»", "color", rcol, "‹P“x‚ğ•Û‚·‚é", 0)
 		end
 
 		-- clipping
-		obj.effect("ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°", directions[(d + 4 * r - 1) % 8 + 1], clipping * (c * i + 1), "ä¸­å¿ƒã®ä½ç½®ã‚’å¤‰æ›´", 1)
+		obj.effect("ƒNƒŠƒbƒsƒ“ƒO", directions[(d + 4 * r - 1) % 8 + 1], clipping * (c * i + 1), "’†S‚ÌˆÊ’u‚ğ•ÏX", 1)
 		rx, ry =
 			((w - dis) * i + clipping / 2) * ((d + r) % 2 * 2 - 1) * (1 - math.ceil(d / 2) % 2),
 			((h - dis) * i + clipping / 2) * ((d + r) % 2 * 2 - 1) * (math.ceil(d / 2) % 2)
@@ -59,11 +59,11 @@ local drawing = function(n, clipping, c, d, isBoth)
 
 		-- edge extraction
 		if edgeExtract == 1 then
-			obj.effect("é ˜åŸŸæ‹¡å¼µ", "ä¸Š", 2, "ä¸‹", 2, "å·¦", 2, "å³", 2)
-			obj.effect("ã‚¨ãƒƒã‚¸æŠ½å‡º", "é€æ˜åº¦ã‚¨ãƒƒã‚¸ã‚’æŠ½å‡º", 1)
-			obj.effect("ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°", "ä¸Š", 2, "ä¸‹", 2, "å·¦", 2, "å³", 2)
+			obj.effect("—ÌˆæŠg’£", "ã", 2, "‰º", 2, "¶", 2, "‰E", 2)
+			obj.effect("ƒGƒbƒW’Šo", "“§–¾“xƒGƒbƒW‚ğ’Šo", 1)
+			obj.effect("ƒNƒŠƒbƒsƒ“ƒO", "ã", 2, "‰º", 2, "¶", 2, "‰E", 2)
 		elseif edgeExtract == 2 then
-			obj.effect("ã‚¨ãƒƒã‚¸æŠ½å‡º", "é€æ˜åº¦ã‚¨ãƒƒã‚¸ã‚’æŠ½å‡º", 1)
+			obj.effect("ƒGƒbƒW’Šo", "“§–¾“xƒGƒbƒW‚ğ’Šo", 1)
 		end
 
 		-- drawing

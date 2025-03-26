@@ -48,8 +48,9 @@ The code is modified based on the English Translated Version of RepeatingClip sc
 Thus, this code is does not work on the original Aviutl(jp).
   - Aviutl English version (created by Webcam): https://hapsung.tistory.com/24
 
-  Added Edge Extraction check box to the dialog0.
-  - Apply Edge extraction to the clipped drawing image when enabled
+(Updated 2025.03.27 by Litti)
+Edited edge extraction code so that the name matches with the english version aviutl
+
 ]]
 
 --track0:Number,0,200,10,1
@@ -60,74 +61,74 @@ Thus, this code is does not work on the original Aviutl(jp).
 --dialog:Blank,local blank=5;NoBlankChangeRate/chk,local isDisableCB=0;WithRotation/chk,local isFollowRotation=1;Edge extraction(0-2),local edgeExtract=0;Monochromatic/chk,local isCol=0;>Color/col,local col=0xdddddd;>GradColor/col,local gcol=0x000000;Virtual buffer/chk,local isBuffer=0;>buffer W,local bufferW=obj.screen_w;>buffer H,local bufferH=obj.screen_h;
 
 
-local n, clipping, c, d, isBoth = obj.track0, obj.track1, obj.track2 / 100, obj.track3, obj.check0
-local x, y = 0, 0 --obj.ox,obj.oy
-local w, h = obj.w, obj.h
-local directions = { "Top", "Bottom", "Left", "Right", "Bottom", "Top", "Right", "Left" }
+local n, clipping, c, d, isBoth = obj.track0, obj.track1, obj.track2/100, obj.track3, obj.check0
+local x,y=0,0 --obj.ox,obj.oy
+local w,h=obj.w,obj.h
+local directions = {"Top","Bottom","Left","Right","Bottom","Top","Right","Left"}
 blank = blank or 0
 edgeExtract = edgeExtract or 0
 
 -- define drawing
-local drawing = function(n, clipping, c, d, isBoth)
-	local dis, rx, ry
+local drawing = function(n,clipping,c,d,isBoth)
+	local dis,rx,ry
 	local r = isBoth and 1 or 0
-
-	for i = 1, n do
-		dis = clipping * (c / 2 * i * (1 - isDisableCB) + 1) - blank
+	
+	for i=1,n do
+		dis = clipping*(c/2*i*(1-isDisableCB)+1) -blank
 
 		-- load
-		if isBuffer == 1 then
+		if isBuffer==1 then
 			obj.setoption("dst", "tmp")
 		end --tempbuffer
-		obj.copybuffer("obj", "cache:RC")
+		obj.copybuffer("obj","cache:RC")
 
 		-- colorize
-		if isCol == 1 and col then
+		if isCol==1 and col then
 			gcol = gcol or col
-			local mcol, mgcol = { RGB(col) }, { RGB(gcol) } -- num to table
-			local af, uf = (i / n), 1 - (i / n)
-			local rcol = RGB(                      -- changing RGB to gradate
-				mcol[1] * uf + mgcol[1] * af,
-				mcol[2] * uf + mgcol[2] * af,
-				mcol[3] * uf + mgcol[3] * af
-			)
-			obj.effect("Monochromatic", "color", rcol, "Keep luminance", 0)
+			local mcol,mgcol = {RGB(col)},{RGB(gcol)}	-- num to table
+			local af, uf = (i/n), 1-(i/n)
+			local rcol = RGB(							-- changing RGB to gradate
+				mcol[1]*uf +mgcol[1]*af,
+				mcol[2]*uf +mgcol[2]*af,
+				mcol[3]*uf +mgcol[3]*af
+				)
+			obj.effect("Monochromatic","color",rcol,"Keep luminance",0)
 		end
-
+		
 		-- clipping
-		obj.effect("Clipping", directions[(d + 4 * r - 1) % 8 + 1], clipping * (c * i + 1), "Change the center position",
+		obj.effect("Clipping",directions[(d +4*r-1)%8+1],clipping*(c*i+1),"Change the center position",
 			1)
-		rx, ry =
-			((w - dis) * i + clipping / 2) * ((d + r) % 2 * 2 - 1) * (1 - math.ceil(d / 2) % 2),
-			((h - dis) * i + clipping / 2) * ((d + r) % 2 * 2 - 1) * (math.ceil(d / 2) % 2)
-		if isFollowRotation == 1 then
-			local t = obj.rz / 180 * math.pi
-			local mx, my = rx, ry
-			rx = mx * math.cos(t) - my * math.sin(t)
-			ry = mx * math.sin(t) + my * math.cos(t)
+		rx,ry =
+			((w-dis)*i +clipping/2) *((d+r)%2*2-1) *(1-math.ceil(d/2)%2),
+			((h-dis)*i +clipping/2) *((d+r)%2*2-1) *(math.ceil(d/2)%2)
+		if isFollowRotation==1 then
+			local t=obj.rz/180*math.pi
+			local mx, my=rx, ry
+			rx = mx*math.cos(t) - my*math.sin(t)
+			ry = mx*math.sin(t) + my*math.cos(t)
 		end
-
-		-- edge extraction
+		
+		--edge extraction
 		if edgeExtract == 1 then
 			obj.effect("Region expansion", "Top", 2, "Bottom", 2, "Left", 2, "Right", 2)
-			obj.effect("Edge extraction", "Extract opacity edge", 1)
+			obj.effect("Edge extraction", "Extract transparency edge", 1)
 			obj.effect("Clipping", "Top", 2, "Bottom", 2, "Left", 2, "Right", 2)
 		elseif edgeExtract == 2 then
-			obj.effect("Edge extraction", "Extract opacity edge", 1)
+			obj.effect("Edge extraction", "Extract transparency edge", 1)
 		end
-
+		
 		-- drawing
 		obj.draw(x + rx, y + ry)
 	end
 end
 
 -- save
-obj.copybuffer("cache:RC", "obj")
+obj.copybuffer("cache:RC","obj")
 
 -- tempbuffer
-if isBuffer == 1 then
+if isBuffer==1 then 
 	bufferW, bufferH = bufferW or obj.screen_w, bufferH or obj.screen_h
-	if obj.index == 0 then
+	if obj.index==0 then
 		obj.setoption("dst", "tmp", bufferW, bufferH)
 	else
 		obj.setoption("dst", "tmp")
@@ -138,13 +139,13 @@ end
 obj.draw()
 
 -- draw items
-drawing(n, clipping, c, d)
+drawing(n,clipping,c,d)
 if isBoth then
-	drawing(n, clipping, c, d, isBoth)
+	drawing(n,clipping,c,d,isBoth)
 end
 
 -- draw tempbuffer
-if isBuffer == 1 and obj.index == obj.num - 1 then
+if isBuffer==1 and obj.index==obj.num-1 then
 	obj.load("tempbuffer")
 	obj.draw()
 end
